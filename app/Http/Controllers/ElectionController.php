@@ -48,8 +48,14 @@ class ElectionController extends Controller
         $result = ElectionResult::find($id);
 
         if ($result) {
-            Storage::delete('images/' . $result->image_path);
+            $imagePath = public_path('images/' . $result->image_path);
+
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+
             $result->delete();
+
             return redirect()->back()->with('success', 'Result deleted successfully.');
         }
 
